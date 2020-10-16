@@ -2,92 +2,54 @@ package validator
 
 import (
 	"fmt"
-	"regexp"
-	"strings"
 	"testing"
 )
 
-func TestBracketSanitizer(t *testing.T) {
+func TestVerifyNRC(t *testing.T) {
 	validator := NewNRCValidator()
 
-	for _, nrc := range validator.GetNRCData() {
-		fmt.Println(nrc.ID)
+	if validator.VerifyNRC("၄/ကပလ(နိုင်)၀၉၄၁၈၆") != true {
+		t.Log("it Should be correct tsp code")
+		t.Fail()
 	}
-	fmt.Println("done")
-	// utils := NewNRCConverter()
-	// if utils.sanitizeBrackets("(") != `\(` {
-	// 	t.Log("it Should return SanitizedRegex for bracket (")
-	// 	t.Fail()
-	// }
 
-	// if utils.sanitizeBrackets(")") != `\)` {
-	// 	t.Log("it Should return SanitizedRegex for bracket ) ")
-	// 	t.Fail()
-	// }
-}
-
-func convertBurmeseNum2En(code string) string {
-	var number string = ""
-	for _, v := range strings.Split(code, "") {
-		number += mmNum2En[v]
-
+	if validator.VerifyNRC("၁၂/ကပလ(နိုင်)၀၉၄၁၈၆") == true {
+		t.Log("it Should be correct tsp code")
+		t.Fail()
 	}
-	return number
 }
 
 func TestValidator(t *testing.T) {
-	var mmNRCformatRegex = `([၀-၉]{1,2})/([ကခဂဃငစဆဇဈညဎဏတထဒဓနပဖဗဘမယရလဝသဟဠဥဧ]{3})(\([နိုင်,ဧည့်,ပြု,စ,သ,သီ]{1,6}\))([၀-၉]{6})$`
-	re := regexp.MustCompile(mmNRCformatRegex)
 	validator := NewNRCValidator()
-	fmt.Println(re.FindAllStringSubmatch(strings.Trim(" ၁၂/မဂတ(နိုင်)၀၉၄၁၈၆", ""), -1)[0][1])
-	matchArr := re.FindAllStringSubmatch(strings.Trim(" ၁၂/မဂတ(နိုင်)၀၉၄၁၈၆", ""), -1)[0]
 
-	citizenShipStatus := matchArr[3]
-	nrcSRCodebackSlash := fmt.Sprintf("%s/", matchArr[1])
-	nrcSRCode := fmt.Sprintf("%s/", matchArr[1])
-	townShipCode := fmt.Sprintf("%s", matchArr[2])
-	nrcSrEnglish := convertBurmeseNum2En(nrcSRCode)
-
-	nrcCodeIndex := searchNrcCodeIndexBySrcTownShipCode(nrcSRCodebackSlash, townShipCode)
-
-	if nrcCodeIndex == -1 {
-		fmt.Println("Error")
+	if validator.ValidateNRC("၄/ဝကမ(နိုင်)၀၉၄၁၈၆") != true {
+		t.Log("it Should be correct NRC")
+		t.Fail()
 	}
-	nrcCodeData := validator.GetNRCData()[nrcCodeIndex]
-	fmt.Println(nrcCodeData)
 
-	townshipIndex := searchTownshipIndexBySRCode(nrcSrEnglish, nrcCodeData.NrcTownshipName)
-	if townshipIndex == -1 {
-		fmt.Println("Error")
+	if validator.ValidateNRC("၁၂/မဂတ(နိုင်)၀၉၄၁၈၆") != true {
+		t.Log("it Should be correct NRC Format")
+		t.Fail()
 	}
-	townShip := validator.GetTownShipData()[townshipIndex]
-	fmt.Println(townShip)
-	fmt.Println(citizenShipStatus)
-	fmt.Println("Done")
 }
 
-func searchNrcCodeIndexBySrcTownShipCode(nrcSRCodebackSlash string, townshipCode string) int {
-	var codeData int
+func TestExtractor(t *testing.T) {
 	validator := NewNRCValidator()
-	codeData = -1
-	for index, code := range validator.GetNRCData() {
-		if code.NrcSrCode == nrcSRCodebackSlash && code.NrcTownshipCode == townshipCode {
-			codeData = index
-			break
-		}
+	fmt.Println(validator.ExtractNrcInfo("၁၂/မဂတ(နိုင်)၀၉၄၁၈၆"))
+	nrcInfo := NRCInfo{
+		SRCodeEN:          "12",
+		SRCodeMM:          "၁၂",
+		CitizenShipStatus: "(နိုင်)",
+		TspName:           "မင်္ဂလာတောင်ညွန့်",
+		TspCode:           "မဂတ",
 	}
-	return codeData
-}
-
-func searchTownshipIndexBySRCode(SRCode string, townshipName string) int {
-	var codeData int
-	validator := NewNRCValidator()
-	codeData = -1
-	for index, code := range validator.GetTownShipData() {
-		if code.SRCode == SRCode && code.TspName == strings.Trim(townshipName, "") {
-			codeData = index
-			break
-		}
+	if nrcInfo != validator.ExtractNrcInfo("၁၂/မဂတ(နိုင်)၀၉၄၁၈၆") {
+		t.Log("It should be correct NRC Info")
+		t.Fail()
 	}
-	return codeData
+	nullNrcInfo := NRCInfo{}
+	if nullNrcInfo.TspName == validator.ExtractNrcInfo("၁၂/မဂတ(နိုင်)၀၉၄၁၈၆").TspName {
+		t.Log("It should be empty response")
+		t.Fail()
+	}
 }
