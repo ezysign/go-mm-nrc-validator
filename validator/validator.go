@@ -78,11 +78,19 @@ func (v *validator) GetMatchNRC(nrc string) []string {
 
 	return matchArr
 }
+
+// ValidateNRC Validate whether the myanmar nrc string format
+// is valid format
+// return bool
 func (v *validator) ValidateNRC(nrc string) bool {
 
 	re := regexp.MustCompile(mmNRCformatRegex)
 	return len(re.FindAllStringSubmatch(strings.Trim(nrc, ""), -1)) > 0
 }
+
+// VerifyNRC verifies whether the myanmar nrc string format
+// is valid format and also correct township and SRcode
+// return bool
 func (v *validator) VerifyNRC(nrc string) bool {
 	if v.ValidateNRC(strings.Trim(nrc, "")) == false {
 		return false
@@ -106,6 +114,9 @@ func (v *validator) VerifyNRC(nrc string) bool {
 	}
 	return true
 }
+
+// ExtractNrcInfo extract nrc information of the provided NRC string 
+// return bool
 func (v *validator) ExtractNrcInfo(nrc string) NRCInfo {
 	var nrcInfo NRCInfo
 	validator := NewNRCValidator()
