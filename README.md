@@ -1,9 +1,7 @@
 # GO-MM-NRC-Validator
 
 
-[![Build Status](https://travis-ci.org/winhtaikaung/Rabbit-Go.svg?branch=master)](https://travis-ci.org/winhtaikaung/Rabbit-Go)
 
-[![GO Report](https://goreportcard.com/badge/github.com/winhtaikaung/Rabbit-Go)](https://goreportcard.com/report/github.com/winhtaikaung/Rabbit-Go)
 
 **Myanmar NRC Validator for GoLang that validates the NRC format using township data**
 
