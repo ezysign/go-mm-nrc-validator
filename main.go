@@ -1,6 +1,6 @@
 package main
 
-import "go-mm-nrc-validator/validator"
+import "github.com/ezysign/go-mm-nrc-validator/validator"
 
 func main() {
 	v := validator.NewNRCValidator()
