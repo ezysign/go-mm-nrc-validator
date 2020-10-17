@@ -8,9 +8,7 @@ language: go
 # updates. Any older versions be considered deprecated. Don't bother testing
 # with them.
 go:
-  - 1.9.x
-  - 1.x
-
+  - 1.13.x
 # Only clone the most recent commit.
 git:
   depth: 1
@@ -38,5 +36,5 @@ install:
 # failing test, we want to see both. Configure golangci-lint with a
 # .golangci.yml file at the top level of your repo.
 script:
-  - go test -v -race ./...  # Run all the tests with the race detector enabled
-  
+  - go test -count=1 -v ./...  # Run all the tests with the race detector enabled
+#   - go test ${TRAVIS_HOME}/gopath/src/github.com/ezysign/go-mm-nrc-converter/converter/nrc_converter_test.go  # Run all the tests with the race detector enabled
