@@ -1,6 +1,6 @@
 # GO-MM-NRC-Validator
 
-
+[![Build Status](https://travis-ci.org/ezysign/go-mm-nrc-validator.svg?branch=main)](https://travis-ci.org/github/ezysign/go-mm-nrc-validator)
 
 
 **Myanmar NRC Validator for GoLang that validates the NRC format using township data**
