@@ -1,7 +1,6 @@
 package validator
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -35,7 +34,7 @@ func TestValidator(t *testing.T) {
 
 func TestExtractor(t *testing.T) {
 	validator := NewNRCValidator()
-	fmt.Println(validator.ExtractNrcInfo("၁၂/မဂတ(နိုင်)၀၉၄၁၈၆"))
+
 	nrcInfo := NRCInfo{
 		SRCodeEN:          "12",
 		SRCodeMM:          "၁၂",
